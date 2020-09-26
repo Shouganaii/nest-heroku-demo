@@ -1,16 +1,16 @@
-import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+
+import { AuthService } from "./modules/businessLayer/auth/auth.service";
+import { Controller, UseGuards, Post, Get, Request } from "@nestjs/common";
+import { LocalAuthGuard } from "./modules/businessLayer/auth/guards/local-auth.guard";
+import { JwtAuthGuard } from "./modules/shared/guards/auth.guard";
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) { }
+  constructor(private readonly authService: AuthService) { }
 
   @Get()
-  getHello(): string {
-    return this.appService.getHello();
-  }
-  @Get('/products')
-  getProducts() {
-    return this.appService.getProducts();
+  getProfile() {
+    return "hello world";
   }
 }
