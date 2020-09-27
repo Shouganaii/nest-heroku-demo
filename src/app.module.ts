@@ -24,7 +24,7 @@ import { AppController } from './app.controller';
     ConfigModule.forRoot(),
     AuthModule,
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', '..', 'files'),
+      rootPath: join(__dirname, '..',  'files'),
       serveStaticOptions: { index: false }
     }),
   
@@ -32,7 +32,7 @@ import { AppController } from './app.controller';
       dest: './files',
     }),
     MongooseModule.forRoot('mongodb+srv://caiocaio:caiocaio@iwaiter.nwbd3.mongodb.net/<dbname>?retryWrites=true&w=majority'),
-    //MongooseModule.forRoot('mongodb://localhost:27017/iwaiter'),
+  //  MongooseModule.forRoot('mongodb://localhost:27017/iwaiter'),
     MongooseModule.forFeature([
       {
         name: 'Customer',
