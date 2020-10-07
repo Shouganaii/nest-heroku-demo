@@ -33,6 +33,7 @@ export class AuthController {
     @ApiResponse({ status: HttpStatus.UNPROCESSABLE_ENTITY, description: 'Dados  inválidos' })
     async customerLogin(@Body() model: AuthDto): Promise<any> {
         try {
+            console.log('aqui')
             if (!model.email || !model.password) {
                 return new HttpException(new Result('Dados inválidos', false, null, null), HttpStatus.UNPROCESSABLE_ENTITY);
             }
@@ -42,7 +43,7 @@ export class AuthController {
                 return new HttpException(new Result('Usuário ou senha inválidos', false, null, null), HttpStatus.UNAUTHORIZED);
             }
             const token = await this.authService.createToken(customer.name, customer.email, customer.photo, customer.roles)
-            return new Result('Cartão salvo com sucesso', true, { customer, token }, null)
+            return new Result('Login realizado com sucesso!', true, { customer, token }, null)
         } catch (error) {
             console.log(error)
         }
@@ -58,7 +59,7 @@ export class AuthController {
     @ApiResponse({ status: HttpStatus.UNPROCESSABLE_ENTITY, description: 'Dados inválidos' })
     async authWithOrderOpen(@Body() model: AuthWithOrderOpenDto): Promise<any> {
         try {
-            console.log(model)
+            console.log('aa')
             if (!model.email || !model.id_establishment || !model.id_point || !model.password) {
                 return new HttpException(new Result('Dados inválidos', false, null, null), HttpStatus.UNPROCESSABLE_ENTITY);
             }
@@ -67,10 +68,10 @@ export class AuthController {
                 return new HttpException(new Result('Usuário ou senha inválidos', false, null, null), HttpStatus.UNAUTHORIZED);
             }
             const token = await this.authService.createToken(customer.name, customer.email, customer.photo, customer.roles);
-
+            
             const checkData = await this.orderService.getOrderOpen(model.id_establishment, model.id_point, customer._id, model.id_order);
 
-            return new HttpException(new Result(null, true, { customer, token, checkData }, null), HttpStatus.OK)
+            return new HttpException(new Result('Login realizado com sucesso!', true, { customer, token, checkData }, null), HttpStatus.OK)
         } catch (error) {
             console.log(error)
         }
@@ -106,7 +107,7 @@ export class AuthController {
     @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Email ou senha inválidos' })
     @ApiResponse({ status: HttpStatus.UNPROCESSABLE_ENTITY, description: 'Dados  inválidos' })
     async auth(@Body() model: AuthEstablishmentDto) {
-        console.log(model)
+        
         if (!model.email || !model.password) {
             return new HttpException(new Result('Dados  inválidos', false, null, null), HttpStatus.UNPROCESSABLE_ENTITY)
         }

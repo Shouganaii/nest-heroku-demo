@@ -309,4 +309,20 @@ export class EstablishmentController {
             throw new HttpException(new Result(null, false, null, error), HttpStatus.NOT_FOUND);
         }
     }
+    @Get('all')
+    @ApiOperation({
+        summary: 'Traz informações de da conta do estabelecimento',
+    })
+    @ApiResponse({ status: HttpStatus.OK, description: '' })
+    @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Dados  inválidos' })
+    @ApiResponse({ status: HttpStatus.UNPROCESSABLE_ENTITY, description: '' })
+    async getAllEstablishments(): Promise<any> {
+        try {
+            const establishment = await this.service.getAllEstablishments();
+            console.log(JSON.stringify(establishment,null,'\t'))
+            return new Result(null, true, { establishments: establishment }, null)
+        } catch (error) {
+            return new Result('Houve um problema para trazer os dados da página inicial', false, null, error);
+        }
+    }
 }

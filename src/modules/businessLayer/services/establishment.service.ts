@@ -146,4 +146,11 @@ export class EstablishmentService {
         }
 
     }
+    // eslint-disable-next-line @typescript-eslint/adjacent-overload-signatures
+    async getAllEstablishments(): Promise<any> {
+        const establishment = await this.model
+            .find({},'-password')
+            .exec();
+        return establishment;
+    }
 }

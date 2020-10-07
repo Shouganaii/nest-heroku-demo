@@ -76,7 +76,6 @@ export class CustomerController {
     async updateCustomerData(@Param('id_customer') id_customer: string, @Body() body: any) {
         try {
             const response = await this.service.updateCustomer(id_customer, body.data, body.type)
-            console.log(response)
             return new Result('Dados atualizados com sucesso', true, response, []);
         } catch (err) {
             throw new HttpException(new Result('Não foi possível atualizar', false, null, err), HttpStatus.NOT_MODIFIED);
