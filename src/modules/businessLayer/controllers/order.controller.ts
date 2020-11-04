@@ -34,22 +34,25 @@ export class OrderController {
 
             const bringEstablishmentInfo = await this.establishmentService.getEveything(idEstablishment)
             const { settings: { openingHours, closingTime } } = bringEstablishmentInfo[0];
-            const currentHour = new Date().getHours()
-            function parseTime(timeString) {
-                if (timeString == '') return null;
-                const d = new Date();
-                const time = timeString.match(/(\d+)(:(\d\d))?\s*(p?)/i);
-                d.setHours(parseInt(time[1], 10) + ((parseInt(time[1], 10) < 12 && time[4]) ? 12 : 0));
-                d.setMinutes(parseInt(time[3], 10) || 0);
-                d.setSeconds(0, 0);
-                return d;
+            const currentHour = new Date();
+            let hrs: any = currentHour.getHours();
+            let minutos: any = currentHour.getMinutes();
+            if (hrs < 10) {
+                hrs = `0${hrs}:00`
             }
-            const open = parseTime(openingHours).getHours();
-            const close = parseTime(closingTime).getHours();
-            if (currentHour > open && currentHour < close) {
+            if (minutos < 10) {
+                minutos = `0${minutos}:00`
+            }
+
+            const now1 = hrs + ":" + minutos + ":00";
+            const abre = openingHours + ":00";
+            const fecha = closingTime + ":00";
+            
+            if (now1 > abre && now1 < fecha) {
                 const catalog = await this.service.getCatalog(idEstablishment);
                 return new Result('Catalogo carregado com sucesso', true, catalog, null)
-            } else {
+            }
+            else {
                 return new Result('Fora do horário de funcionamento desse restaurante não é possível abrir comanda', false, null, null)
             }
         } catch (error) {
@@ -225,4 +228,5 @@ export class OrderController {
             return new HttpException(new Result('Não foi possível confirmar o pagamento', false, null, null), HttpStatus.NOT_FOUND);
         }
     }
+    
 }
