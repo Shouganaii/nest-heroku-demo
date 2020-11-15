@@ -31,8 +31,8 @@ import { AppController } from './app.controller';
     MulterModule.register({
       dest: './files',
     }),
-    MongooseModule.forRoot('mongodb+srv://caiocaio:caiocaio@iwaiter.nwbd3.mongodb.net/<dbname>?retryWrites=true&w=majority'),
-   // MongooseModule.forRoot('mongodb://localhost:27017/iwaiter'),
+  //  MongooseModule.forRoot('mongodb+srv://caiocaio:caiocaio@iwaiter.nwbd3.mongodb.net/<dbname>?retryWrites=true&w=majority'),
+    MongooseModule.forRoot('mongodb://localhost:27017/iwaiter'),
     MongooseModule.forFeature([
       {
         name: 'Customer',

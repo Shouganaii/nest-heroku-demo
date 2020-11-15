@@ -40,26 +40,25 @@ export class CustomerController {
         const customers = await this.service.find(id_customer);
         return new Result(null, true, customers, null);
     }
+
     @Get('info/:id_customer')
-    @ApiOperation({
-        summary: 'Pega as informações de configurações de um cliente,juntamente com os dados das suas comandas',
-    })
-    @ApiResponse({ status: HttpStatus.FOUND, description: '' })
-
     async getUserInfo(@Param('id_customer') id_customer: string) {
-        const customers = await this.service.findUserInfo(id_customer);
-        const customerOrders = await this.orderService.getAllCustomerOrders(id_customer);
-
-        return new Result(null, true, { customers, customerOrders }, null);
+        try {
+            
+            const customers = await this.service.findUserInfo(id_customer);
+            
+            const customerOrders = await this.orderService.getAllCustomerOrders(id_customer);
+            
+            return new Result(null, true, { customers, customerOrders }, null);
+        } catch (error) {
+            console.log(error)
+        }
     }
+
     @Post(':id_customer')
     @UseGuards(JwtAuthGuard)
     @UseInterceptors(new RoleInterceptor(['customer']))
-    @ApiOperation({
-        summary: 'Atualiza as informações de configurações de um cliente',
-    })
-    @ApiResponse({ status: HttpStatus.OK, description: '' })
-    async update(@Param('id_customer') id_customer, @Body() model: UpdateCustomerDto) {
+     async update(@Param('id_customer') id_customer, @Body() model: UpdateCustomerDto) {
         try {
             await this.service.update(id_customer, model);
             return new Result('Dados alterados com sucesso', true, null, null);

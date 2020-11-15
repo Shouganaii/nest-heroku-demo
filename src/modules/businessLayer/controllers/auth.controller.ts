@@ -68,7 +68,7 @@ export class AuthController {
                 return new HttpException(new Result('Usuário ou senha inválidos', false, null, null), HttpStatus.UNAUTHORIZED);
             }
             const token = await this.authService.createToken(customer.name, customer.email, customer.photo, customer.roles);
-            
+
             const checkData = await this.orderService.getOrderOpen(model.id_establishment, model.id_point, customer._id, model.id_order);
 
             return new HttpException(new Result('Login realizado com sucesso!', true, { customer, token, checkData }, null), HttpStatus.OK)
@@ -88,14 +88,20 @@ export class AuthController {
     async post(@Body() model: CreateCustomerDto) {
         try {
             if (!model.email || !model.name || !model.password) {
-                return new HttpException(new Result('Dados inválidos', false, null, null), HttpStatus.UNPROCESSABLE_ENTITY);
+                return new HttpException(new Result('Dados inválidos', false, null, null), HttpStatus.OK);
+            }
+            const checkEmail = await this.service.checkCustomerEmail(model.email)
+            console.log(checkEmail)
+            if (checkEmail.length > 0) {
+                return new HttpException(new Result('Esse email já está em uso', false, null, null), HttpStatus.OK);
             }
             const customer = new CustomerDto(model.name, model.email, model.password);
+
             const res = await this.service.create(customer);
-            return new Result('Usuário criado com sucesso', true, res, null);
+            return new HttpException(new Result('Cadastro efetuado com sucesso', true, res, null), HttpStatus.OK);
         } catch (error) {
             //Rollback caso não dê pra adicionar usuário
-            return new HttpException(new Result('Esse email já está em uso', false, null, error), HttpStatus.BAD_REQUEST);
+            return new HttpException(new Result('Houve um problema', false, null, error), HttpStatus.OK);
         }
     }
 
@@ -107,7 +113,7 @@ export class AuthController {
     @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Email ou senha inválidos' })
     @ApiResponse({ status: HttpStatus.UNPROCESSABLE_ENTITY, description: 'Dados  inválidos' })
     async auth(@Body() model: AuthEstablishmentDto) {
-        
+
         if (!model.email || !model.password) {
             return new HttpException(new Result('Dados  inválidos', false, null, null), HttpStatus.UNPROCESSABLE_ENTITY)
         }

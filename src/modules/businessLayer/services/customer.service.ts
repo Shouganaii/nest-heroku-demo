@@ -18,8 +18,9 @@ export class CustomerService {
     }
 
     async checkCustomerEmail(data: string): Promise<any> {
-        const customer = this.model.find({ email: data })
+        const customer = await this.model.find({ email: data })
         console.log(customer)
+        return customer
     }
     async findAll(): Promise<Customer[]> {
         return await this.model.find({}, 'name email')
@@ -50,8 +51,8 @@ export class CustomerService {
             .exec();
         return customer;
     }
-    async findUserInfo(idCustomer: string) {
-        return await this.model.find({ _id: idCustomer })
+    async findUserInfo(idCustomer: string): Promise<any> {
+        return await this.model.findOne({ _id: idCustomer }).exec()
     }
     async updateCustomer(idCustomer: string, data: string, field: string): Promise<any> {
         switch (field) {
